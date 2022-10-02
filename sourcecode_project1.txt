@@ -1,0 +1,114 @@
+
+github link: GitHub Link : https://github.com/bhavyaarora0016/SchoolDB_project1
+
+create database SchoolDB
+GO
+
+--Create table "Students"
+CREATE TABLE [dbo].[Students] (
+    [RollNo] int IDENTITY(1,1) NOT NULL,
+    [Name] nvarchar(max)  NOT NULL,
+    [DOB] datetime  NOT NULL,
+    [ClassClassNo] int  NOT NULL
+);
+GO
+
+-- Creating table 'Classes'
+CREATE TABLE [dbo].[Classes] (
+    [ClassNo] int IDENTITY(1,1) NOT NULL,
+    [RoomNo] int  NOT NULL,
+    [Strength] int  NOT NULL,
+    [ClassTeacher] nvarchar(max)  NOT NULL
+);
+GO
+
+-- Creating table 'Subjects'
+CREATE TABLE [dbo].[Subjects] (
+    [SubjectId] int IDENTITY(1,1) NOT NULL,
+    [SubjectName] nvarchar(max)  NOT NULL,
+    [Duration] nvarchar(max)  NOT NULL,
+    [ClassClassNo] int  NOT NULL
+);
+GO
+
+-- Creating table 'SubjectClass'
+CREATE TABLE [dbo].[SubjectClass] (
+    [Subjects_SubjectId] int  NOT NULL,
+    [Classes_ClassNo] int  NOT NULL
+);
+GO
+
+--********************************************************************--
+
+-- Creating primary key on [RollNo] in table 'Students'
+ALTER TABLE [dbo].[Students]
+ADD CONSTRAINT [PK_Students]
+    PRIMARY KEY CLUSTERED ([RollNo] ASC);
+GO
+
+-- Creating primary key on [ClassNo] in table 'Classes'
+ALTER TABLE [dbo].[Classes]
+ADD CONSTRAINT [PK_Classes]
+    PRIMARY KEY CLUSTERED ([ClassNo] ASC);
+GO
+
+-- Creating primary key on [SubjectId] in table 'Subjects'
+ALTER TABLE [dbo].[Subjects]
+ADD CONSTRAINT [PK_Subjects]
+    PRIMARY KEY CLUSTERED ([SubjectId] ASC);
+GO
+
+-- Creating primary key on [Subjects_SubjectId], [Classes_ClassNo] in table 'SubjectClass'
+ALTER TABLE [dbo].[SubjectClass]
+ADD CONSTRAINT [PK_SubjectClass]
+    PRIMARY KEY CLUSTERED ([Subjects_SubjectId], [Classes_ClassNo] ASC);
+GO
+
+
+-- Creating foreign key on [ClassClassNo] in table 'Students'
+ALTER TABLE [dbo].[Students]
+ADD CONSTRAINT [FK_ClassStudent]
+    FOREIGN KEY ([ClassClassNo])
+    REFERENCES [dbo].[Classes]
+        ([ClassNo])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_ClassStudent'
+CREATE INDEX [IX_FK_ClassStudent]
+ON [dbo].[Students]
+    ([ClassClassNo]);
+GO
+
+-- Creating foreign key on [Subjects_SubjectId] in table 'SubjectClass'
+ALTER TABLE [dbo].[SubjectClass]
+ADD CONSTRAINT [FK_SubjectClass_Subject]
+    FOREIGN KEY ([Subjects_SubjectId])
+    REFERENCES [dbo].[Subjects]
+        ([SubjectId])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+-- Creating foreign key on [Classes_ClassNo] in table 'SubjectClass'
+ALTER TABLE [dbo].[SubjectClass]
+ADD CONSTRAINT [FK_SubjectClass_Class]
+    FOREIGN KEY ([Classes_ClassNo])
+    REFERENCES [dbo].[Classes]
+        ([ClassNo])
+    ON DELETE NO ACTION ON UPDATE NO ACTION;
+GO
+
+--*************************************************************************************************************
+
+-- Creating non-clustered index for FOREIGN KEY 'FK_SubjectClass_Class'
+CREATE INDEX [IX_FK_SubjectClass_Class]
+ON [dbo].[SubjectClass]
+    ([Classes_ClassNo]);
+GO
+
+
+--***********************************************
+
+sp_help Students
+sp_help Classes
+sp_help Subjects
